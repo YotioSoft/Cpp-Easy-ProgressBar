@@ -2,15 +2,18 @@
 #include <unistd.h>
 #include <iostream>
 
+#define INCREMENTS  10
+
 using namespace std;
 
 void progress_bar(unsigned int progress) {
-    // 進度を10%刻みに
-    progress = (progress / 10) * 10;
-
     // 100を超えていたら100%に
     if (progress > 100)
         progress = 100;
+    
+    // 進度をINCREMENTS%刻みに（100%の場合はそのまま）
+    if (progress < 100)
+        progress = (progress / INCREMENTS) * INCREMENTS;
 
     // 上書きの準備
     cout << "\r" << string(16, ' ');            // 空白で埋める
@@ -18,10 +21,10 @@ void progress_bar(unsigned int progress) {
 
     // プログレスバーを上書き
     cout << "|";
-    cout << string(progress/10, '=');           // (progress/10)文字分をバー(=)で埋める
+    cout << string(progress/INCREMENTS, '=');   // (progress/INCREMENTS)文字分をバー(=)で埋める
     if (progress < 100) {
-        cout << ">";                            // バーの先端部分（<100%のとき）
-        cout << string(10-1-progress/10, ' ');  // (10-1-progress/10)文字分を空白で埋める
+        cout << ">";                                                // バーの先端部分
+        cout << string(100/INCREMENTS-1-progress/INCREMENTS, ' ');  // 残りを空白で埋める
     }
     
     cout << "|";
